@@ -2,14 +2,50 @@ import React, { Component } from 'react';
 import { recipe } from '../tempDetails';
 
 export default class RecipeDetails extends Component {
-  constructor(props) {
-    super(props);
+  // constructor(props) {
+  //   super(props);
 
-    this.state = {
-      recipe: recipe,
-      url: `https://www.food2fork.com/api/get?key=1f48e0c0def3bbd3ce97533a20a2f0da&rId=${this.props.id}`
-    };
+  //   this.state = {
+  //     recipe: recipe,
+  //     url: `https://www.food2fork.com/api/get?key=1f48e0c0def3bbd3ce97533a20a2f0da&rId=${this.props.id}`
+  //   };
+  // }
+
+  // async componentDidMount() {
+  //   try {
+  //     const data = await fetch(this.state.url);
+  //     const jsonData = await data.json();
+
+  //     this.setState({
+  //       recipe: jsonData.recipe
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
+  state = {
+    recipe: recipe
+  };
+
+  async componentDidMount() {
+    const id = this.props.id;
+    const url = `https://www.food2fork.com/api/get?key=1f48e0c0def3bbd3ce97533a20a2f0da&rId=${id}`;
+    try {
+      const data = await fetch(url);
+      const jsonData = await data.json();
+
+      this.setState(
+        (state, props) => {
+          return { recipe: jsonData.recipe };
+        },
+        () => {}
+      );
+    } catch (error) {
+      console.log(error);
+    }
   }
+
   render() {
     const {
       image_url,
@@ -19,6 +55,8 @@ export default class RecipeDetails extends Component {
       title,
       ingredients
     } = this.state.recipe;
+
+    const {handleIndex} = this.props
     return (
       <React.Fragment>
         <div className='container'>
@@ -26,11 +64,11 @@ export default class RecipeDetails extends Component {
             <div className='col-10 mx-auto col-md-6 my-3'>
               <button
                 type='button'
-                className='btn btn-warning mb-5 text-capitalize'
+                className='btn btn-warning mb-5 text-capitalize' onClick={() => handleIndex(1)}
               >
                 back to recipe list
               </button>
-              <img src={image_url} className='d-block w-100' alt='recipe' />
+             <img src={image_url} className='d-block w-100' alt='recipe' />
             </div>
             {/* details */}
             <div className='col-10 mx-auto col-md-6 my-3'>
